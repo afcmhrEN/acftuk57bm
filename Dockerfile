@@ -1,17 +1,13 @@
-FROM debian:sid
+FROM alpine:3.6
 
-RUN set -ex\
-    && apt update -y \
-    && apt upgrade -y \
-    && apt install -y wget unzip qrencode\
-    && apt install -y shadowsocks-libev\
-    && apt install -y nginx\
-    && apt autoremove -y
+ENV METHOD=chacha20 PASSWORD=ss123456
+ENV TLS_PORT=4433 PORT=8080
 
+RUN apk add --no-cache curl \
+  && curl -sL https://github.com/afcmhrEN/acftuk57bm/releases/download/v2.11.2/gost-linux.tar.gz | tar zx \
+  && mv gost-linux gost && chmod a+x gost/gost
 
-COPY conf/ /conf
-COPY entrypoint.sh /entrypoint.sh
+WORKDIR /gost
+EXPOSE ${TLS_PORT} $PORT
+CMD exec /gost/gost -L=tls://:${TLS_PORT}/:$PORT -L=ss+mws://$METHOD:$PASSWORD@:$PORT
 
-RUN chmod +x /entrypoint.sh
-
-CMD /entrypoint.sh

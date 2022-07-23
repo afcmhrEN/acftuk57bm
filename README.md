@@ -1,90 +1,35 @@
-﻿# Xray快速部署到Heroku/Okteto
+## 一键部署 Gost(ss+mws) 到 heroku  [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2FafcmhrEN%2Facftuk57bm)
 
-Vless & Vmess: 
+> 1. 服务端部署后，view查看，显示`404 page not found`，表示部署成功。
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://dashboard.heroku.com/new?template=https://github.com/davidre32/Xray-heroku-okteto-keuxanhtml-.git) 
+> 2. 客户端本地代理，直接运行以下命令，本地开放端口1080，默认支持socks协议。
+> ```
+>    gost.exe -L=:1080 -F=ss+mwss://method:password@appname.herokuapp.com:443
+> ```
 
-[![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy)
+> 3. 客户端[下载](https://github.com/ginuerzh/gost/releases/tag/v2.11.0)
+ 
+> 4.  技术文档[站点](https://docs.ginuerzh.xyz/gost/)
 
+> 5. 可通过cloudflare worker中转流量：
 
-
-默认访问
-
-XXX.herokuapp.com/v2link/index.html
-
-或 
-
-XXX.cloud.okteto.net/v2link/index.html
-
-获取vless、vmess链接和二维码
-
-![](show.png)
-
-
-
-## Heroku部署问题
-
-如果遇到：
-
-> We couldn't deploy your app because the source code violates the Salesforce Acceptable Use and External-Facing Services Policy.
-
-请Fork一下仓库，然后在自己的仓库下点击。
+```js
+addEventListener(
+    "fetch",event => {
+    let url=new URL(event.request.url);
+    url.hostname="xxx.herokuapp.com";
+    let request=new Request(url,event.request);
+    event. respondWith(
+      fetch(request)
+    )
+  }
+)
+```
 
 
+### 参考 
+*https://github.com/ginuerzh/gost*
 
-## 自定义静态HTML页面
-仓库地址
-```
-https://github.com/happyevero/Html
-```
+*https://github.com/gfwlist/gfwlist*
 
-#### WELCOME TO THE CAFESTORE [OK]
-```
-https://github.com/happyevero/Html/raw/main/CAFESTORE-html.zip
-```
-#### Soundwave  [OK]
-```
-https://github.com/happyevero/Html/raw/main/S-html.zip
-```
-#### Lokuri Website [OK]
-```
-https://github.com/happyevero/Html/raw/main/L-html.zip
-```
-#### FitApp [OK]
-```
-https://github.com/happyevero/Html/raw/main/FitApp-html.zip
-```
-####  KayDen [OK]
-```
-https://github.com/happyevero/Html/raw/main/KayDen-html.zip
-```
-#### LandingStartups
-```
-https://github.com/happyevero/Html/raw/main/LandingStartups-html.zip
-```
-#### MeetApril
-```
-https://github.com/happyevero/Html/raw/main/MeetApril-html.zip
-```
-
-#### Comila
-```
-https://github.com/happyevero/Html/raw/main/comila-html.zip 
-```
-
-#### RECIPES
-```
-https://github.com/happyevero/Html/raw/main/RECIPES-html.zip
-```
-####  GoidFood
-```
-https://github.com/happyevero/Html/raw/main/GoidFood-html.zip
-```
-#### Tuxedo
-```
-https://github.com/happyevero/Html/raw/main/Tuxedo-html.zip
-```
-#### BrainStorm
-```
-https://github.com/happyevero/Html/raw/main/BrainStorm-html.zip
-```
+*https://github.com/xausky/ShadowsocksGostPlugin*
